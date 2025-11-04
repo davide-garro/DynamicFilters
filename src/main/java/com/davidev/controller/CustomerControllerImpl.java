@@ -3,6 +3,7 @@ package com.davidev.controller;
 import com.davidev.annotation.IllegalFilterQueryParameterException;
 import com.davidev.domain.Customer;
 import com.davidev.filter.FilterConfig;
+import com.davidev.service.CustomerService;
 import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +15,11 @@ import java.util.*;
 public class CustomerControllerImpl implements CustomerController{
 
     private final FilterConfig filterConfig;
+    private final CustomerService customerService;
 
-    public CustomerControllerImpl(FilterConfig filterConfig) {
+    public CustomerControllerImpl(FilterConfig filterConfig, CustomerService customerService) {
         this.filterConfig = filterConfig;
+        this.customerService = customerService;
     }
 
     @Override
@@ -28,20 +31,8 @@ public class CustomerControllerImpl implements CustomerController{
     @Override
     @GetMapping
     public List<Customer> getAllCustomersWithFilters(@RequestParam MultiValueMap<String, String> filters) {
-        if(filters == null){
-            /*return all customers*/
-            return Collections.emptyList();
-        }
         validateFilterFields(filters.keySet(), filterConfig.getAllowedFields());
-        List<String> statuses = filters.get("status");
-        List<String> subscriptions = filters.get("subscription");
-        if(statuses != null){
-            System.out.println("status: " + statuses);
-        }
-        if(subscriptions != null){
-            System.out.println("subscription: " + subscriptions);
-        }
-        return Collections.emptyList();
+        return customerService.findCustomersFilteredByStatusAndSub(filters);
     }
 
     @Override

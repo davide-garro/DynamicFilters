@@ -10,5 +10,7 @@ spring:
     password: password
     driverClassName: org.h2.Driver
 logging:
-    level:
-      root: DEBUG
+  level:
+    org.springframework.boot.context.properties: DEBUG
+    org.springframework.boot.context.config: DEBUG
+    org.springframework.boot.context.logging: DEBUG
